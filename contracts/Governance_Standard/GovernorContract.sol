@@ -18,8 +18,8 @@ contract GovernorContract is
     GovernorVotesQuorumFraction,
     GovernorTimelockControl
 {
-    address[] stakeholderslist;
-    address[] contributorslist;
+    // address[] stakeholderslist;
+    // address[] contributorslist;
     address public immutable owner;
 
     constructor(
@@ -36,55 +36,55 @@ contract GovernorContract is
             0
         )
         GovernorVotes(_token)
-        GovernorVotesQuorumFraction(4)
+        GovernorVotesQuorumFraction(_quorumPercentage)
         GovernorTimelockControl(_timelock)
     {
         owner = msg.sender;
-        stakeholderslist.push(owner);
+        // stakeholderslist.push(owner);
     }
 
-    function isStakeholder(address addr) public view returns (bool) {
-        for (uint i = 0; i < stakeholderslist.length; i++) {
-            if (stakeholderslist[i] == addr) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // function isStakeholder(address addr) public view returns (bool) {
+    //     for (uint i = 0; i < stakeholderslist.length; i++) {
+    //         if (stakeholderslist[i] == addr) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    function isContributor(address addr) public view returns (bool) {
-        for (uint i = 0; i < contributorslist.length; i++) {
-            if (contributorslist[i] == addr) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // function isContributor(address addr) public view returns (bool) {
+    //     for (uint i = 0; i < contributorslist.length; i++) {
+    //         if (contributorslist[i] == addr) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    modifier stakeholderOnly(string memory message) {
-        require(isStakeholder(msg.sender), message);
-        _;
-    }
+    // modifier stakeholderOnly(string memory message) {
+    //     require(isStakeholder(msg.sender), message);
+    //     _;
+    // }
 
-    modifier contributorOnly(string memory message) {
-        require(isContributor(msg.sender), message);
-        _;
-    }
+    // modifier contributorOnly(string memory message) {
+    //     require(isContributor(msg.sender), message);
+    //     _;
+    // }
 
-    modifier ownerOnly() {
-        if (msg.sender != owner) revert Fundme__NotOwner();
-        _;
-    }
+    // modifier ownerOnly() {
+    //     if (msg.sender != owner) revert Fundme__NotOwner();
+    //     _;
+    // }
 
-    function addStakeholder(address newStakeholder) public ownerOnly {
-        stakeholderslist.push(newStakeholder);
-    }
+    // function addStakeholder(address newStakeholder) public ownerOnly {
+    //     stakeholderslist.push(newStakeholder);
+    // }
 
-    function addContributor(
-        address newContributor
-    ) public stakeholderOnly("allowed For stakeholder only") {
-        contributorslist.push(newContributor);
-    }
+    // function addContributor(
+    //     address newContributor
+    // ) public stakeholderOnly("allowed For stakeholder only") {
+    //     contributorslist.push(newContributor);
+    // }
 
     // The following functions are overrides required by Solidity.
 
@@ -133,12 +133,7 @@ contract GovernorContract is
         uint256[] memory values,
         bytes[] memory calldatas,
         string memory description
-    )
-        public
-        override(Governor, IGovernor)
-        stakeholderOnly("allowed For stakeholder only")
-        returns (uint256)
-    {
+    ) public override(Governor, IGovernor) returns (uint256) {
         return super.propose(targets, values, calldatas, description);
     }
 
@@ -160,7 +155,7 @@ contract GovernorContract is
     )
         internal
         override(Governor, GovernorTimelockControl)
-        stakeholderOnly("allowed For stakeholder only")
+    // stakeholderOnly("allowed For stakeholder only")
     {
         super._execute(proposalId, targets, values, calldatas, descriptionHash);
     }
