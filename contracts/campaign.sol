@@ -6,8 +6,8 @@ import "./Governance_Standard/GovernorContract.sol";
 
 contract Campaign is Ownable {
     mapping(address => bool) public fundingApproval;
-    bytes32 private immutable CONTRIBUTOR_ROLE = keccak256("CONTRIBUTOR");
-    bytes32 private immutable STAKEHOLDER_ROLE = keccak256("STAKEHOLDER");
+    // bytes32 private immutable CONTRIBUTOR_ROLE = keccak256("CONTRIBUTOR");
+    // bytes32 private immutable STAKEHOLDER_ROLE = keccak256("STAKEHOLDER");
     mapping(address => uint256) private contributors;
     mapping(address => uint256) private stakeholders;
     address[] stakeholderslist;
@@ -45,14 +45,14 @@ contract Campaign is Ownable {
 
     function requestFunding(
         address investor
-    ) public contributorOnly("allowed contributor") {
+    ) public contributorOnly("allowed For contributor only") {
         fundingApproval[investor] = true;
     }
 
     function acceptFunding()
         public
         payable
-        stakeholderOnly("allowed stakeholder")
+        stakeholderOnly("allowed For stakeholder only")
     {
         require(fundingApproval[msg.sender]);
     }
