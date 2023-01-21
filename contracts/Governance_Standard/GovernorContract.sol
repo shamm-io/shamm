@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
-error Fundme__NotOwner();
+error Fundme__NotCampaignOwner();
 
 contract GovernorContract is
     Governor,
@@ -20,7 +20,7 @@ contract GovernorContract is
 {
     // address[] stakeholderslist;
     // address[] contributorslist;
-    address public immutable owner;
+    address public immutable campaignOwner;
 
     constructor(
         IVotes _token,
@@ -39,7 +39,7 @@ contract GovernorContract is
         GovernorVotesQuorumFraction(_quorumPercentage)
         GovernorTimelockControl(_timelock)
     {
-        owner = msg.sender;
+        campaignOwner = msg.sender;
         // stakeholderslist.push(owner);
     }
 
@@ -71,10 +71,10 @@ contract GovernorContract is
     //     _;
     // }
 
-    // modifier ownerOnly() {
-    //     if (msg.sender != owner) revert Fundme__NotOwner();
-    //     _;
-    // }
+    modifier campaignOwnerOnly() {
+        if (msg.sender != campaignOwner) revert Fundme__NotCampaignOwner();
+        _;
+    }
 
     // function addStakeholder(address newStakeholder) public ownerOnly {
     //     stakeholderslist.push(newStakeholder);
@@ -133,7 +133,7 @@ contract GovernorContract is
         uint256[] memory values,
         bytes[] memory calldatas,
         string memory description
-    ) public override(Governor, IGovernor) returns (uint256) {
+    ) public override(Governor, IGovernor) campaignOwnerOnly returns (uint256) {
         return super.propose(targets, values, calldatas, description);
     }
 
