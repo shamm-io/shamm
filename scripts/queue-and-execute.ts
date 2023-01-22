@@ -9,12 +9,10 @@ import {
 import { moveBlocks } from "../utils/move-blocks"
 import { moveTime } from "../utils/move-time"
 
-export async function queueAndExecute() {
-  const args = []
-  const functionToCall = FUNC
+export async function queueAndExecute(functionToCall: string, args: any[], propsosalDesc: string) {
   const campaign = await ethers.getContract("Campaign")
   const encodedFunctionCall = campaign.interface.encodeFunctionData(functionToCall, args)
-  const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(PROPOSAL_DESCRIPTION))
+  const descriptionHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(propsosalDesc))
   // could also use ethers.utils.id(PROPOSAL_DESCRIPTION)
 
   const governor = await ethers.getContract("GovernorContract")
@@ -41,7 +39,7 @@ export async function queueAndExecute() {
   
 }
 
-queueAndExecute()
+queueAndExecute(FUNC, [], PROPOSAL_DESCRIPTION)
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error)

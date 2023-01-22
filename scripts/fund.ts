@@ -1,7 +1,8 @@
 // @ts-ignore
 import { ethers, getNamedAccounts } from "hardhat"
+import {ETHAMOUNT} from "../helper-hardhat-config"
 
-async function main() {
+async function fund(ethAmount: string) { 
 
   // @ts-ignore
   const { deployer } = await getNamedAccounts()
@@ -18,7 +19,7 @@ async function main() {
 }
 
 
-main()
+fund(ETHAMOUNT)
   .then(() => process.exit(0))
   .catch((error) => {
     console.error(error)
