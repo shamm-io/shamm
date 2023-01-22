@@ -33,4 +33,4 @@ export interface networkConfigItem {
   export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
   
   export const FUNC = "withdraw"
-  export const PROPOSAL_DESCRIPTION = "Proposal #1 withdraw funds"
+  export const PROPOSAL_DESCRIPTION = "Proposal #2 withdraw funds"
