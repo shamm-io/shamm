@@ -51,7 +51,7 @@ contract Campaign is Ownable {
     //     _;
     // }
 
-    function withdraw() public onlyOwner {
+    function withdraw() public {
         // for (
         //     uint256 funderIndex = 0;
         //     funderIndex < funders.length;
@@ -85,5 +85,9 @@ contract Campaign is Ownable {
 
     function getOwner() public view returns (address) {
         return i_owner;
+    }
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
     }
 }
