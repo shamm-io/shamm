@@ -1,5 +1,6 @@
 export interface networkConfigItem {
     ethUsdPriceFeed?: string
+    name?: string
     blockConfirmations?: number
   }
   
@@ -8,10 +9,15 @@ export interface networkConfigItem {
   }
   
   export const networkConfig: networkConfigInfo = {
+    // 5: {
+    //   name: "goerli",
+    //   ethUsdPriceFeed: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e",
+    // },
     localhost: {},
     hardhat: {},
     goerli: {
       blockConfirmations: 6,
+      ethUsdPriceFeed: "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e"
     },
   }
   
@@ -26,6 +32,5 @@ export interface networkConfigItem {
   export const VOTING_DELAY = 1 // 1 Block - How many blocks till a proposal vote becomes active
   export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
   
-  export const NEW_STORE_VALUE = 77
-  export const FUNC = "store"
-  export const PROPOSAL_DESCRIPTION = "Proposal #1 77 in the Box!"
+  export const FUNC = "withdraw"
+  export const PROPOSAL_DESCRIPTION = "Proposal #1 withdraw funds"
