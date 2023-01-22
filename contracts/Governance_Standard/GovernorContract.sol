@@ -18,8 +18,6 @@ contract GovernorContract is
     GovernorVotesQuorumFraction,
     GovernorTimelockControl
 {
-    // address[] stakeholderslist;
-    // address[] contributorslist;
     address public immutable campaignOwner;
 
     constructor(
@@ -40,51 +38,12 @@ contract GovernorContract is
         GovernorTimelockControl(_timelock)
     {
         campaignOwner = msg.sender;
-        // stakeholderslist.push(owner);
     }
-
-    // function isStakeholder(address addr) public view returns (bool) {
-    //     for (uint i = 0; i < stakeholderslist.length; i++) {
-    //         if (stakeholderslist[i] == addr) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // function isContributor(address addr) public view returns (bool) {
-    //     for (uint i = 0; i < contributorslist.length; i++) {
-    //         if (contributorslist[i] == addr) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // modifier stakeholderOnly(string memory message) {
-    //     require(isStakeholder(msg.sender), message);
-    //     _;
-    // }
-
-    // modifier contributorOnly(string memory message) {
-    //     require(isContributor(msg.sender), message);
-    //     _;
-    // }
 
     modifier campaignOwnerOnly() {
         if (msg.sender != campaignOwner) revert Fundme__NotCampaignOwner();
         _;
     }
-
-    // function addStakeholder(address newStakeholder) public ownerOnly {
-    //     stakeholderslist.push(newStakeholder);
-    // }
-
-    // function addContributor(
-    //     address newContributor
-    // ) public stakeholderOnly("allowed For stakeholder only") {
-    //     contributorslist.push(newContributor);
-    // }
 
     // The following functions are overrides required by Solidity.
 
@@ -152,11 +111,7 @@ contract GovernorContract is
         uint256[] memory values,
         bytes[] memory calldatas,
         bytes32 descriptionHash
-    )
-        internal
-        override(Governor, GovernorTimelockControl)
-    // stakeholderOnly("allowed For stakeholder only")
-    {
+    ) internal override(Governor, GovernorTimelockControl) {
         super._execute(proposalId, targets, values, calldatas, descriptionHash);
     }
 

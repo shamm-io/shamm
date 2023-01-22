@@ -34,3 +34,6 @@ export interface networkConfigItem {
   
   export const FUNC = "withdraw"
   export const PROPOSAL_DESCRIPTION = "Proposal #2 withdraw funds"
+  export const ETHAMOUNT = "0.1"
+  export const VOTEWAY = 1
+  export const RESAON = "requirements satisfied"

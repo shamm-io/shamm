@@ -1,5 +1,4 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
-// const { networkConfig, devChains } = require("../helper-hardhat-config");
 import { networkConfig, developmentChains } from "../helper-hardhat-config"
 import { DeployFunction } from "hardhat-deploy/types"
 import '@nomiclabs/hardhat-ethers' 
