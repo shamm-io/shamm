@@ -12,7 +12,7 @@ async function fund(ethAmount: string) {
   console.log(`balance is ${balance}`);
   console.log("Funding contract...");
   const transactionResponse = await campaign.acceptFunding({
-    value: ethers.utils.parseEther("0.1"),
+    value: ethers.utils.parseEther(ethAmount),
   });
   await transactionResponse.wait();
   console.log("Funded!");
