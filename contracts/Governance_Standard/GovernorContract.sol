@@ -8,7 +8,8 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
-error Fundme__NotCampaignOwner();
+error GovernorContract__NotCampaignOwner();
+error GovernorContract__NotCampaignContributor();
 
 contract GovernorContract is
     Governor,
@@ -18,14 +19,16 @@ contract GovernorContract is
     GovernorVotesQuorumFraction,
     GovernorTimelockControl
 {
-    address public immutable campaignOwner;
+    address public campaignOwner;
+    address payable[] contributorList;
 
     constructor(
         IVotes _token,
         TimelockController _timelock,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
-        uint256 _votingDelay
+        uint256 _votingDelay,
+        address payable[] memory contributorsList
     )
         Governor("GovernorContract")
         GovernorSettings(
@@ -38,10 +41,35 @@ contract GovernorContract is
         GovernorTimelockControl(_timelock)
     {
         campaignOwner = msg.sender;
+        contributorList = contributorsList;
+    }
+
+    function isContributor(address contributor) public view returns (bool) {
+        for (
+            uint256 indexOfContributor = 0;
+            indexOfContributor < contributorList.length;
+            indexOfContributor++
+        ) {
+            if (contributorList[indexOfContributor] == contributor) {
+                return true;
+            }
+            // else {
+            //     revert GovernorContract__NotCampaignContributor();
+            // }
+        }
+        return false;
+    }
+
+    modifier contributorOnly() {
+        if (!isContributor(msg.sender)) {
+            revert GovernorContract__NotCampaignContributor();
+        }
+        _;
     }
 
     modifier campaignOwnerOnly() {
-        if (msg.sender != campaignOwner) revert Fundme__NotCampaignOwner();
+        if (msg.sender != campaignOwner)
+            revert GovernorContract__NotCampaignOwner();
         _;
     }
 
@@ -105,6 +133,21 @@ contract GovernorContract is
         return super.proposalThreshold();
     }
 
+    function castVoteWithReason(
+        uint256 proposalId,
+        uint8 support,
+        string calldata reason
+    )
+        public
+        virtual
+        override(Governor, IGovernor)
+        contributorOnly
+        returns (uint256)
+    {
+        address voter = _msgSender();
+        return _castVote(proposalId, voter, support, reason);
+    }
+
     function _execute(
         uint256 proposalId,
         address[] memory targets,
@@ -137,5 +180,13 @@ contract GovernorContract is
         bytes4 interfaceId
     ) public view override(Governor, GovernorTimelockControl) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    function getCampOwner() public view returns (address) {
+        return campaignOwner;
+    }
+
+    function addCont() public {
+        contributorList.push(payable(msg.sender));
     }
 }
