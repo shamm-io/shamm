@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
+import { ethers, network } from "hardhat"
 // import verify from "../helper-functions"
 import {
   networkConfig,
@@ -16,12 +17,15 @@ const deployGovernorContract: DeployFunction = async function (hre: HardhatRunti
   const { deployer } = await getNamedAccounts()
   const governanceToken = await get("GovernanceToken")
   const timeLock = await get("TimeLock")
+  const campaign = await ethers.getContract("Campaign")
+  const contributors = await campaign.getContributors()
   const args = [
       governanceToken.address,
       timeLock.address,
       QUORUM_PERCENTAGE,
       VOTING_PERIOD,
       VOTING_DELAY,
+      contributors
   ]
   
   log("----------------------------------------------------")

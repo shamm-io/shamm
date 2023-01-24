@@ -13,6 +13,7 @@ const setupContracts: DeployFunction = async function (hre: HardhatRuntimeEnviro
   const governanceToken = await ethers.getContract("GovernanceToken", deployer)
   const timeLock = await ethers.getContract("TimeLock", deployer)
   const governor = await ethers.getContract("GovernorContract", deployer)
+  const campaign = await ethers.getContract("Campaign", deployer)
 
   log("----------------------------------------------------")
   log("Setting up contracts for roles...")
@@ -23,10 +24,17 @@ const setupContracts: DeployFunction = async function (hre: HardhatRuntimeEnviro
 
   const proposerTx = await timeLock.grantRole(proposerRole, governor.address)
   await proposerTx.wait(1)
+  const proposer1Tx = await timeLock.grantRole(proposerRole, deployer)
+  await proposer1Tx.wait(1)
   const executorTx = await timeLock.grantRole(executorRole, ADDRESS_ZERO)
   await executorTx.wait(1)
   const revokeTx = await timeLock.revokeRole(adminRole, deployer)
   await revokeTx.wait(1)
+  const campaignContract = await ethers.getContractAt("Campaign", campaign.address)
+  const owner = await campaign.getOwner()
+  console.log(`owner is ${owner}`)
+  const transferTx = await campaignContract.transferOwnership(timeLock.address)
+  await transferTx.wait(1)
   // Guess what? Now, anything the timelock wants to do has to go through the governance process!
 }
 

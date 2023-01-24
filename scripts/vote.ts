@@ -1,6 +1,8 @@
 import * as fs from "fs"
 // @ts-ignore
-import { network, ethers } from "hardhat"
+import { HardhatRuntimeEnvironment } from "hardhat/types"
+import { network, ethers, hardhatArguments } from "hardhat"
+import hre from 'hardhat'
 import { proposalsFile, developmentChains, VOTING_PERIOD, VOTEWAY, RESAON } from "../helper-hardhat-config"
 import { moveBlocks } from "../utils/move-blocks"
 
@@ -18,7 +20,9 @@ async function voteMain(voteWay: number, reason: string) {
 export async function vote(proposalId: string, voteWay: number, reason: string) {
   console.log("Voting...")
   const governor = await ethers.getContract("GovernorContract")
-  const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason)
+  const [owner, addr1, addr2] = await ethers.getSigners();
+  
+  const voteTx = await governor.connect(addr1).castVoteWithReason(proposalId, voteWay, reason)
   const voteTxReceipt = await voteTx.wait(1)
   console.log(voteTxReceipt.events[0].args.reason)
   const proposalState = await governor.state(proposalId)
@@ -26,6 +30,7 @@ export async function vote(proposalId: string, voteWay: number, reason: string) 
   if (developmentChains.includes(network.name)) {
     await moveBlocks(VOTING_PERIOD + 1)
   }
+  
 }
 
 voteMain(VOTEWAY, RESAON)

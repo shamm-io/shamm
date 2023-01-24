@@ -3,7 +3,7 @@ import { ethers, getNamedAccounts } from "hardhat"
 import {ETHAMOUNT} from "../helper-hardhat-config"
 
 async function fund(ethAmount: string) { 
-
+  const [owner, addr1, addr2] = await ethers.getSigners();
   // @ts-ignore
   const { deployer } = await getNamedAccounts()
   const campaign = await ethers.getContract("Campaign", deployer);
@@ -11,10 +11,16 @@ async function fund(ethAmount: string) {
   const balance = await campaign.getBalance();
   console.log(`balance is ${balance}`);
   console.log("Funding contract...");
-  const transactionResponse = await campaign.acceptFunding({
+  const transactionResponse = await campaign.connect(addr1).acceptFunding({
     value: ethers.utils.parseEther(ethAmount),
   });
   await transactionResponse.wait();
+  
+  
+  const governor = await ethers.getContract("GovernorContract", deployer);
+  // await governor.connect(addr1)
+  const transactionResponse1 = await governor.connect(addr1).addCont();
+  await transactionResponse1.wait();
   console.log("Funded!");
 }
 
