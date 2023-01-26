@@ -22,7 +22,8 @@ export async function vote(proposalId: string, voteWay: number, reason: string) 
   const governor = await ethers.getContract("GovernorContract")
   const [owner, addr1, addr2] = await ethers.getSigners();
   
-  const voteTx = await governor.connect(addr1).castVoteWithReason(proposalId, voteWay, reason)
+  // const voteTx = await governor.connect(addr1).castVoteWithReason(proposalId, voteWay, reason)
+  const voteTx = await governor.castVoteWithReason(proposalId, voteWay, reason)
   const voteTxReceipt = await voteTx.wait(1)
   console.log(voteTxReceipt.events[0].args.reason)
   const proposalState = await governor.state(proposalId)
