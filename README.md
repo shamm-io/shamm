@@ -16,19 +16,25 @@ yarn add --dev @chainlink/contracts
 yarn hardhat node
 ```
 
-2. Propose a function:
+2. Fund the campaign:
+
+```shell
+yarn hardhat run scripts/fund.ts
+```
+
+3. Propose a function:
 
 ```shell
 yarn hardhat run scripts/propose.ts
 ```
 
-3. Vote a proposal:
+4. Vote a proposal:
 
 ```shell
 yarn hardhat run scripts/vote.ts
 ```
 
-4. Queue and Execute a propsal after voting:
+5. Queue and Execute a propsal after voting:
 
 ```shell
 yarn hardhat run scripts/queue-and-execute.ts
