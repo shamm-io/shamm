@@ -11,15 +11,18 @@ async function fund(ethAmount: string) {
   const balance = await campaign.getBalance();
   console.log(`balance is ${balance}`);
   console.log("Funding contract...");
-  const transactionResponse = await campaign.connect(addr1).acceptFunding({
+  // const transactionResponse = await campaign.connect(addr1).acceptFunding({
+  //   value: ethers.utils.parseEther(ethAmount),
+  // });
+  const transactionResponse = await campaign.acceptFunding({
     value: ethers.utils.parseEther(ethAmount),
   });
   await transactionResponse.wait();
   
   
   const governor = await ethers.getContract("GovernorContract", deployer);
-  // await governor.connect(addr1)
-  const transactionResponse1 = await governor.connect(addr1).addCont();
+  // const transactionResponse1 = await governor.connect(addr1).addCont();
+  const transactionResponse1 = await governor.addCont();
   await transactionResponse1.wait();
   console.log("Funded!");
 }
