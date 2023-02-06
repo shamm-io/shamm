@@ -26,7 +26,7 @@ const deployCampaign: DeployFunction = async function (hre: HardhatRuntimeEnviro
   }
   const campaign = await deploy("Campaign", {
     from: deployer,
-    args: [ethUsdPriceFeedAddress, INTERVAL], 
+    args: [ethUsdPriceFeedAddress, INTERVAL, 60], 
     log: true,
     // we need to wait if on a live network so we can verify properly
     waitConfirmations: networkConfig[network.name].blockConfirmations || 1,
