@@ -13,9 +13,9 @@ import { moveBlocks } from "../utils/move-blocks"
 export async function propose(args: any[], functionToCall: string, proposalDescription: string) {
   const governor = await ethers.getContract("GovernorContract")
   const campaign = await ethers.getContract("Campaign")
-  // const args = await ethers.utils.getAddress(governor.getCampOwner())
+  // const gg = await ethers.utils.getAddress(governor.getCampOwner())
   // console.log(typeof args)
-  // const args = []
+  // const arg = [gg]
   const encodedFunctionCall = campaign.interface.encodeFunctionData(functionToCall, args)
   console.log(`Proposing ${functionToCall} on ${campaign.address} with ${args}`)
   console.log(`Proposal Description:\n  ${proposalDescription}`)
