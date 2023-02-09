@@ -8,9 +8,16 @@ export default function Fund() {
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
   const campaignAddress =
-    chainId in contractAddresses ? contractAddresses[chainId][0] : null;
+    chainId in contractAddresses ? contractAddresses[chainId][1][0] : null;
 
+  try {
+    var obj = JSON.parse(abi[chainId][1]); // Here I am parsing String-Abi into JSON
+  } catch (ex) {
+    console.error(ex);
+  }
   // const [amount, setAmount] = useState("0");
+  console.log(obj);
+  const campaignAbi = obj;
   const [fundAmount, setFundAmount] = useState("0");
 
   const {
@@ -19,7 +26,7 @@ export default function Fund() {
     isLoading,
     isFetching,
   } = useWeb3Contract({
-    abi: abi,
+    abi: campaignAbi,
     contractAddress: campaignAddress,
     functionName: "requestFunding",
     params: {},
@@ -33,7 +40,7 @@ export default function Fund() {
   //   }, [amount, fundAmount, requestFunding]);
 
   const handleChange = (event) => {
-    // 👇 Get input value from "event"
+    // Get input value from "event"
     setFundAmount(event.target.value);
     console.log(event.target.value, "event value");
   };
@@ -83,7 +90,7 @@ export default function Fund() {
             {isLoading || isFetching ? (
               <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
             ) : (
-              "fund"
+              "Fund"
             )}
           </button>
         </div>
