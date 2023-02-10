@@ -4,7 +4,8 @@ import { useMoralis } from "react-moralis";
 // import { useEffect, useState } from "react";
 // import Moralis from "moralis-v1";
 // import { ethers, network } from "hardhat";
-import ethers from "ethers";
+// import ethers from "ethers";
+import { useContract } from "wagmi";
 import {
   // developmentChains1,
   // VOTING_DELAY,
@@ -34,14 +35,20 @@ export default function Propose() {
   // const args = [];
 
   const {
-    runContractFunction: propose,
+    runContractFunction: proposeFunction,
     data: enterTxResponse,
     isLoading,
     isFetching,
   } = useWeb3Contract();
 
+  const campaign = useContract({
+    address: campaignAddress,
+    abi: campaignAbi,
+  });
+
   async function _propose(args, functionToCall, proposalDescription) {
-    const campaign = ethers.getContract(campaignAddress);
+    // const campaign = ethers.getContract(campaignAddress);
+
     const encodedFunctionCall = campaign.interface.encodeFunctionData(
       functionToCall,
       args
@@ -65,11 +72,13 @@ export default function Propose() {
     );
     console.log(`Proposal Description:\n  ${proposalDescription}`);
 
-    const proposeTx = await propose({
+    const proposeTx = await proposeFunction({
       params: options,
       onSuccess: handleSuccess,
       onError: (error) => console.log(error),
     });
+
+    console.log(proposeTx);
 
     // If working on a development chain, we will push forward till we get to the voting period.
     // if (developmentChains1.includes(31337)) {

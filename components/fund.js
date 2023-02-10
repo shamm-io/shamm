@@ -12,7 +12,7 @@ export default function Fund() {
     chainId in contractAddresses ? contractAddresses[chainId][1][0] : null;
 
   try {
-    var obj = JSON.parse(abi[chainId][1]); // Here I am parsing String-Abi into JSON
+    var obj = JSON.parse(abi[chainId][1][0]); // Here I am parsing String-Abi into JSON
   } catch (ex) {
     console.error(ex);
   }
@@ -46,11 +46,10 @@ export default function Fund() {
     // Get input value from "event"
     setFundAmount(event.target.value);
     console.log(event.target.value, "event value");
-    if(event.target.value.length == 0 || parseFloat(event.target.value) <= 0){
-      setDisable(true)
-    }
-    else{
-      setDisable(false)
+    if (event.target.value.length == 0 || parseFloat(event.target.value) <= 0) {
+      setDisable(true);
+    } else {
+      setDisable(false);
     }
   };
 
