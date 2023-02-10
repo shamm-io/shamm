@@ -62,7 +62,7 @@ export default function Propose() {
       params: {
         targets: [campaignAddress],
         values: [0],
-        calldatas: encodedFunctionCall,
+        calldatas: [encodedFunctionCall],
         description: proposalDescription,
       },
     };
@@ -84,22 +84,22 @@ export default function Propose() {
     // if (developmentChains1.includes(31337)) {
     //   await moveBlocks(VOTING_DELAY + 1);
     // }
-    const proposeReceipt = await proposeTx.wait(1);
-    const proposalId = proposeReceipt.events[0].args.proposalId;
-    console.log(`Proposed with proposal ID:\n  ${proposalId}`);
+    // const proposeReceipt = await proposeTx.wait(1);
+    // const proposalId = proposeReceipt.events[0].args.proposalId;
+    // console.log(`Proposed with proposal ID:\n  ${proposalId}`);
 
-    const proposalState = await governorAddress.state(proposalId);
-    const proposalSnapShot = await governorAddress.proposalSnapshot(proposalId);
-    const proposalDeadline = await governorAddress.proposalDeadline(proposalId);
+    // const proposalState = await governorAddress.state(proposalId);
+    // const proposalSnapShot = await governorAddress.proposalSnapshot(proposalId);
+    // const proposalDeadline = await governorAddress.proposalDeadline(proposalId);
     // save the proposalId
     // storeProposalId(proposalId);
 
     // The state of the proposal. 1 is not passed. 0 is passed.
-    console.log(`Current Proposal State: ${proposalState}`);
+    // console.log(`Current Proposal State: ${proposalState}`);
     // What block # the proposal was snapshot
-    console.log(`Current Proposal Snapshot: ${proposalSnapShot}`);
+    // console.log(`Current Proposal Snapshot: ${proposalSnapShot}`);
     // The block number the proposal voting expires
-    console.log(`Current Proposal Deadline: ${proposalDeadline}`);
+    // console.log(`Current Proposal Deadline: ${proposalDeadline}`);
   }
 
   // function storeProposalId(proposalId) {
@@ -124,7 +124,9 @@ export default function Propose() {
 
   const handleSuccess = async (tx) => {
     try {
-      await tx.wait(1);
+      const proposeReciept = await tx.wait(1);
+      const proposalId = proposeReceipt.events[0].args.proposalId;
+      console.log(`Proposed with proposal ID:\n  ${proposalId}`);
       // updateUIValues();
       // handleNewNotification(tx);
     } catch (error) {
