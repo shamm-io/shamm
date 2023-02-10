@@ -4,8 +4,8 @@ import fs from "fs"
 
 
 
-const FRONTEND_ADDRESSES_FILE = "../shamm-fe/constants/contractAddresses.json"
-const FRONTEND_ABI_FILE = "../shamm-fe/constants/abi.json"
+const FRONTEND_ADDRESSES_FILE = "../shamm/constants/contractAddresses.json"
+const FRONTEND_ABI_FILE = "../shamm/constants/abi.json"
 
 module.exports = async function (){
     if(process.env.UPDATE_FRONTEND){
