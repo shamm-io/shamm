@@ -5,6 +5,7 @@ import styles from '@/styles/Home.module.css'
 import Header from '../components/header'
 import { useMoralis } from 'react-moralis'
 import Fund from '../components/fund'
+import Propose from '../components/propose'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,6 +20,7 @@ export default function Home() {
       </Head>
       <Header/>
       <Fund/>
+      <Propose/>
 
       
       
