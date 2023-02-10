@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#connectWalletButton button{
+    background-color: #FFF;
+    border-radius: 0;
+    border: 1px solid #000;
+    transition-property: background-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+#connectWalletButton button span{
+    color: #000;
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+#connectWalletButton button:hover{
+    background-color: #000;
+}
+
+#connectWalletButton button:hover span{
+    color: #FFF;
+}
