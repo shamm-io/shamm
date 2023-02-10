@@ -1,8 +1,9 @@
 import { useWeb3Contract } from "react-moralis";
 import { abi, contractAddresses } from "../constants";
 import { useMoralis } from "react-moralis";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Moralis from "moralis-v1";
+import { Fascinate } from "@next/font/google";
 
 export default function Fund() {
   const { chainId: chainIdHex } = useMoralis();
@@ -19,6 +20,8 @@ export default function Fund() {
   console.log(obj);
   const campaignAbi = obj;
   const [fundAmount, setFundAmount] = useState("0");
+
+  const [disable, setDisable] = useState(true);
 
   const {
     runContractFunction: requestFunding,
@@ -43,6 +46,12 @@ export default function Fund() {
     // Get input value from "event"
     setFundAmount(event.target.value);
     console.log(event.target.value, "event value");
+    if(event.target.value.length == 0 || parseFloat(event.target.value) <= 0){
+      setDisable(true)
+    }
+    else{
+      setDisable(false)
+    }
   };
 
   const handleSuccess = async (tx) => {
@@ -62,22 +71,22 @@ export default function Fund() {
   // }
 
   return (
-    <div className="p-5">
+    <div className="container mx-auto px-4">
       {campaignAddress ? (
         <div>
           <form>
-            <label for="fname">Enter amount</label>
+            <label htmlFor="fname">Enter amount</label>
             <br />
             <input
-              className="bg-slate-200 py-2 px-4 rounded"
+              className="bg-white py-2 px-4 border-2"
               type="number"
               id="fundAmount"
-              placeholder="0.1"
+              placeholder="Min 0.1"
               onChange={handleChange}
             />
           </form>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto my-2"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto my-2 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={async function () {
               //   setAmountVal();
               await requestFunding({
@@ -85,7 +94,7 @@ export default function Fund() {
                 onError: (error) => console.log(error),
               });
             }}
-            disabled={isLoading || isFetching}
+            disabled={isLoading || isFetching || disable}
           >
             {isLoading || isFetching ? (
               <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
