@@ -1,19 +1,15 @@
 import { useWeb3Contract } from "react-moralis";
 import { abi, contractAddresses } from "../constants";
 import { useMoralis } from "react-moralis";
-// import { useEffect, useState } from "react";
-// import Moralis from "moralis-v1";
-// import { ethers, network } from "hardhat";
-// import ethers from "ethers";
 import { useContract } from "wagmi";
 import {
   // developmentChains1,
   // VOTING_DELAY,
-  // proposalsFile,
+  proposalsFile,
   FUNC,
   PROPOSAL_DESCRIPTION,
 } from "../../shamm_2/helper-hardhat-config";
-// import * as fs from "fs";
+import * as fs from "fs";
 // import { moveBlocks } from "../../shamm_2/utils/move-blocks";
 
 export default function Propose() {
@@ -30,9 +26,6 @@ export default function Propose() {
   } catch (ex) {
     console.error(ex);
   }
-  // const campaignIface = new Interface(campaignAbi);
-
-  // const args = [];
 
   const {
     runContractFunction: proposeFunction,
@@ -84,24 +77,14 @@ export default function Propose() {
     // if (developmentChains1.includes(31337)) {
     //   await moveBlocks(VOTING_DELAY + 1);
     // }
-    // const proposeReceipt = await proposeTx.wait(1);
-    // const proposalId = proposeReceipt.events[0].args.proposalId;
-    // console.log(`Proposed with proposal ID:\n  ${proposalId}`);
 
-    // const proposalState = await governorAddress.state(proposalId);
-    // const proposalSnapShot = await governorAddress.proposalSnapshot(proposalId);
-    // const proposalDeadline = await governorAddress.proposalDeadline(proposalId);
-    // save the proposalId
+    /**@dev calling {storePropsalId} here: */
+    // save the proposalId:
     // storeProposalId(proposalId);
-
-    // The state of the proposal. 1 is not passed. 0 is passed.
-    // console.log(`Current Proposal State: ${proposalState}`);
-    // What block # the proposal was snapshot
-    // console.log(`Current Proposal Snapshot: ${proposalSnapShot}`);
-    // The block number the proposal voting expires
-    // console.log(`Current Proposal Deadline: ${proposalDeadline}`);
   }
 
+  /**@dev Defining {storePropsalId} here: */
+  // function to store proposalID:
   // function storeProposalId(proposalId) {
   //   // const chainId = network.config.chainId.toString();
   //   let proposals;
@@ -116,29 +99,15 @@ export default function Propose() {
   //   fs.writeFileSync(proposalsFile, JSON.stringify(proposals), "utf8");
   // }
 
-  const handleChange = (event) => {
-    // Get input value from "event"
-    setFundAmount(event.target.value);
-    console.log(event.target.value, "event value");
-  };
-
   const handleSuccess = async (tx) => {
     try {
       const proposeReciept = await tx.wait(1);
-      const proposalId = proposeReceipt.events[0].args.proposalId;
+      const proposalId = proposeReciept.events[0].args.proposalId;
       console.log(`Proposed with proposal ID:\n  ${proposalId}`);
-      // updateUIValues();
-      // handleNewNotification(tx);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // function setAmountVal() {
-  //   let gg = document.getElementById("fundAmount").value;
-  //   setAmount(gg.toString());
-  //   console.log(`before ${fundAmount}`);
-  // }
 
   return (
     <div className="p-5">
@@ -147,7 +116,6 @@ export default function Propose() {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto my-2"
             onClick={async function () {
-              //   setAmountVal();
               await _propose([], FUNC, PROPOSAL_DESCRIPTION);
             }}
             disabled={isLoading || isFetching}

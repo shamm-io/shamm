@@ -16,7 +16,6 @@ export default function Fund() {
   } catch (ex) {
     console.error(ex);
   }
-  // const [amount, setAmount] = useState("0");
   console.log(obj);
   const campaignAbi = obj;
   const [fundAmount, setFundAmount] = useState("0");
@@ -36,12 +35,6 @@ export default function Fund() {
     msgValue: Moralis.Units.ETH(fundAmount),
   });
 
-  //   useEffect(() => {
-  //     setFundAmount(amount);
-  //     console.log(`after ${amount}`);
-  //     // setAmountVal();
-  //   }, [amount, fundAmount, requestFunding]);
-
   const handleChange = (event) => {
     // Get input value from "event"
     setFundAmount(event.target.value);
@@ -56,8 +49,6 @@ export default function Fund() {
   const handleSuccess = async (tx) => {
     try {
       await tx.wait(1);
-      // updateUIValues();
-      // handleNewNotification(tx);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +76,7 @@ export default function Fund() {
             />
           </form>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto my-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto rounded my-2 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={async function () {
               //   setAmountVal();
               await requestFunding({
