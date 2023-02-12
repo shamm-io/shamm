@@ -6,6 +6,7 @@ import Header from '../components/header'
 import { useMoralis } from 'react-moralis'
 import Fund from '../components/fund'
 import Propose from '../components/propose'
+import Vote from '../components/vote'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function Home() {
       <Header/>
       <Fund/>
       <Propose/>
+      <Vote/>
 
       
       

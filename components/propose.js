@@ -1,10 +1,16 @@
 import { useWeb3Contract } from "react-moralis";
 import { abi, contractAddresses } from "../constants";
 import { useMoralis } from "react-moralis";
-import { useContract } from "wagmi";
 import {
-  // developmentChains1,
-  // VOTING_DELAY,
+  useContract,
+  useNetwork,
+  useProvider,
+  createClient,
+  configureChains,
+} from "wagmi";
+import {
+  developmentChains1,
+  VOTING_DELAY,
   proposalsFile,
   FUNC,
   PROPOSAL_DESCRIPTION,
@@ -14,7 +20,15 @@ import * as fs from "fs";
 
 export default function Propose() {
   const { chainId: chainIdHex } = useMoralis();
+  // const { chain, chains } = useNetwork();
   const chainId = parseInt(chainIdHex);
+  // const provider = useProvider({
+  //   chainId: chainId,
+  // });
+  // const client = createClient({
+  //   provider,
+  //   webSocketProvider,
+  // });
   const governorAddress =
     chainId in contractAddresses ? contractAddresses[chainId][4][0] : null;
   const campaignAddress =
@@ -83,6 +97,17 @@ export default function Propose() {
     // storeProposalId(proposalId);
   }
 
+  // async function moveBlocks(amount) {
+  //   console.log("Moving blocks...");
+  //   for (let index = 0; index < amount; index++) {
+  //     await provider.request({
+  //       method: "evm_mine",
+  //       params: [],
+  //     });
+  //   }
+  //   console.log(`Moved ${amount} blocks`);
+  // }
+
   /**@dev Defining {storePropsalId} here: */
   // function to store proposalID:
   // function storeProposalId(proposalId) {
@@ -110,7 +135,7 @@ export default function Propose() {
   };
 
   return (
-    <div className="p-5">
+    <div className="container mx-auto px-4">
       {campaignAddress ? (
         <div>
           <button
