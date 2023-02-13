@@ -24,7 +24,7 @@ export default function vote() {
   } catch (ex) {
     console.error(ex);
   }
-  console.log(obj);
+  // console.log(obj);
 
   const [disable, setDisable] = useState(true);
 
@@ -85,7 +85,7 @@ export default function vote() {
               // 0 = Against, 1 = For, 2 = Abstain for this example
               await voteMain(1, "xyz");
             }}
-            disabled={isLoading || isFetching || disable}
+            disabled={isLoading || isFetching}
           >
             {isLoading || isFetching ? (
               <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
@@ -95,7 +95,7 @@ export default function vote() {
           </button>
         </div>
       ) : (
-        <div>No campaign detected</div>
+        <div></div>
       )}
     </div>
   );

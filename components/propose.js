@@ -115,7 +115,7 @@ export default function Propose() {
   //   let proposals;
 
   //   if (fs.existsSync(proposalsFile)) {
-  //     proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
+  // proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
   //   } else {
   //     proposals = {};
   //     proposals[chainId] = [];

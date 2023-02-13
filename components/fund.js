@@ -16,7 +16,7 @@ export default function Fund() {
   } catch (ex) {
     console.error(ex);
   }
-  console.log(obj);
+  // console.log(obj);
   const campaignAbi = obj;
   const [fundAmount, setFundAmount] = useState("0");
 

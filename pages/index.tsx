@@ -7,6 +7,8 @@ import { useMoralis } from 'react-moralis'
 import Fund from '../components/fund'
 import Propose from '../components/propose'
 import Vote from '../components/vote'
+import Queue from '../components/queue'
+import Execute from '../components/execute'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +25,8 @@ export default function Home() {
       <Fund/>
       <Propose/>
       <Vote/>
+      <Queue/>
+      <Execute/>
 
       
       
