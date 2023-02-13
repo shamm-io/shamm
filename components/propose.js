@@ -87,6 +87,8 @@ export default function Propose() {
 
     console.log(proposeTx);
 
+    // addProposal();
+
     // If working on a development chain, we will push forward till we get to the voting period.
     // if (developmentChains1.includes(31337)) {
     //   await moveBlocks(VOTING_DELAY + 1);
@@ -96,6 +98,16 @@ export default function Propose() {
     // save the proposalId:
     // storeProposalId(proposalId);
   }
+
+  const addProposal = async (proposalId) => {
+    const response = await fetch("/api/proposals", {
+      method: "POST",
+      body: proposalId,
+      headers: { "Content-Type": "application/text" },
+    });
+    const data = await response.json();
+    console.log(data);
+  };
 
   // async function moveBlocks(amount) {
   //   console.log("Moving blocks...");
@@ -128,6 +140,7 @@ export default function Propose() {
     try {
       const proposeReciept = await tx.wait(1);
       const proposalId = proposeReciept.events[0].args.proposalId;
+      addProposal(proposalId);
       console.log(`Proposed with proposal ID:\n  ${proposalId}`);
     } catch (error) {
       console.log(error);
