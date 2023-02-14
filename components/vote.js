@@ -5,10 +5,11 @@ import { useState } from "react";
 import {
   developmentChains1,
   VOTING_DELAY,
-  proposalsFile,
+  // proposalsFile,
   FUNC,
   PROPOSAL_DESCRIPTION,
 } from "../../shamm_2/helper-hardhat-config";
+import * as fs from "fs";
 
 export default function vote() {
   const { chainId: chainIdHex } = useMoralis();
@@ -26,7 +27,7 @@ export default function vote() {
   }
   // console.log(obj);
 
-  const [disable, setDisable] = useState(true);
+  const [proposals, setProposals] = useState(true);
 
   const {
     runContractFunction: castVoteWithReason,
@@ -36,7 +37,10 @@ export default function vote() {
   } = useWeb3Contract();
 
   async function voteMain(voteWay, reason) {
-    const proposals = JSON.parse(fs.readFileSync(proposalsFile, "utf8"));
+    fetchProposals();
+    console.log(proposals);
+    // const proposalss = JSON.parse(proposals[chainId].at(-1).toString());
+    // console.log(proposalss);
     // Get the last proposal for the network. You could also change it for your index
     const proposalId = proposals[chainId].at(-1);
     console.log(`proposal ID is ${proposalId}`);
@@ -57,6 +61,15 @@ export default function vote() {
       onError: (error) => console.log(error),
     });
   }
+
+  const fetchProposals = async () => {
+    const response = await fetch("/api/proposals", {
+      method: "GET",
+    });
+    const data = await response.json();
+    setProposals(data);
+    console.log(data);
+  };
 
   const handleSuccess = async (tx) => {
     try {
