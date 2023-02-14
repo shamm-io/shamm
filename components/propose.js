@@ -103,9 +103,9 @@ export default function Propose() {
     const response = await fetch("/api/proposals", {
       method: "POST",
       body: proposalId,
-      headers: { "Content-Type": "application/text" },
+      headers: { "Content-Type": "text/plain" },
     });
-    const data = await response.json();
+    const data = await response.text();
     console.log(data);
   };
 
