@@ -42,6 +42,9 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
     mapping(address => uint256) public contAddressToAmountFunded;
     mapping(address => uint256) public contAddressToAmountRemaining;
     mapping(address => uint256) public waiterAddressToAmountFunded;
+    mapping(address => uint256) public waiterAddressToLastTimeStamp;
+
+    // mapping(address => uint256) public waiterAddressToTransferInterval;
 
     constructor(address priceFeed, uint256 u_Interval, uint256 t_Interval) {
         s_priceFeed = AggregatorV3Interface(priceFeed);
@@ -50,7 +53,7 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
         transferInterval = t_Interval;
         // s_updateState = updateState.OPEN;
         s_updateLastTimeStamp = block.timestamp;
-        s_transferLastTimeStamp = block.timestamp;
+        // s_transferLastTimeStamp = block.timestamp;
     }
 
     function checkUpkeep(
@@ -70,8 +73,26 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
         /* This time {transferTimePassed} is for the refund of contributor's funds when campaign owner fails
         to update contributors
         */
-        bool transferTimePassed = ((block.timestamp - s_transferLastTimeStamp) >
-            transferInterval);
+        bool transferTimePassed;
+        for (
+            uint256 indexOfWaiter = 0;
+            indexOfWaiter < waitinglist.length;
+            indexOfWaiter++
+        ) {
+            address waiterAddress = waitinglist[indexOfWaiter];
+            if (
+                (block.timestamp -
+                    waiterAddressToLastTimeStamp[waiterAddress]) >
+                transferInterval
+            ) {
+                transferTimePassed = true;
+                break;
+            } else {
+                transferTimePassed = false;
+            }
+        }
+        // bool transferTimePassed = ((block.timestamp - s_transferLastTimeStamp) >
+        //     transferInterval);
         bool hasWaiters = waitinglist.length > 0;
 
         bool hasEntrants = (contributorslist.length > 0);
@@ -130,19 +151,23 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
                 indexOfWaiter++
             ) {
                 address payable waiterAddr = waitinglist[indexOfWaiter];
-                (bool success, ) = waiterAddr.call{
-                    value: waiterAddressToAmountFunded[waiterAddr]
-                }("");
-
-                if (!success) {
-                    revert Campaign__TransferFailed();
+                if (
+                    block.timestamp - waiterAddressToLastTimeStamp[waiterAddr] >
+                    transferInterval
+                ) {
+                    (bool success, ) = waiterAddr.call{
+                        value: waiterAddressToAmountFunded[waiterAddr]
+                    }("");
+                    if (!success) {
+                        revert Campaign__TransferFailed();
+                    }
+                    waiterAddressToAmountFunded[waiterAddr] = 0;
+                    delete waitinglist[indexOfWaiter];
                 }
 
-                waiterAddressToAmountFunded[waiterAddr] = 0;
+                // waitinglist = new address payable[](0);
 
-                waitinglist = new address payable[](0);
-
-                s_transferLastTimeStamp = block.timestamp;
+                // s_transferLastTimeStamp = block.timestamp;
             }
         }
     }
@@ -182,6 +207,7 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
         );
 
         waiterAddressToAmountFunded[msg.sender] += msg.value;
+        waiterAddressToLastTimeStamp[msg.sender] += block.timestamp;
         // waiterAddressToAmountRemaining[msg.sender] += msg.value;
         waitinglist.push(payable(msg.sender));
 
@@ -197,6 +223,18 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
         // waiterAddressToAmountRemaining[msg.sender] += msg.value;
         contributorslist.push(payable(contributor));
         waiterAddressToAmountFunded[contributor] = 0;
+
+        for (
+            uint256 indexOfWaiter = 0;
+            indexOfWaiter < waitinglist.length;
+            indexOfWaiter++
+        ) {
+            address payable waiterAddr = waitinglist[indexOfWaiter];
+            if (waiterAddr == contributor) {
+                delete waitinglist[indexOfWaiter];
+                break;
+            }
+        }
 
         return true;
     }
