@@ -186,7 +186,7 @@ contract GovernorContract is
         return campaignOwner;
     }
 
-    function addCont() public {
-        contributorList.push(payable(msg.sender));
+    function addCont(address contributor) public {
+        contributorList.push(payable(contributor));
     }
 }
