@@ -1,6 +1,7 @@
 import * as fs from "fs"
 // @ts-ignore
 import { HardhatRuntimeEnvironment } from "hardhat/types"
+import '@nomiclabs/hardhat-ethers'
 import { network, ethers, hardhatArguments } from "hardhat"
 import hre from 'hardhat'
 import { proposalsFile, developmentChains, VOTING_PERIOD, VOTEWAY, RESAON } from "../helper-hardhat-config"
