@@ -48,6 +48,8 @@ export default function Propose() {
     isFetching,
   } = useWeb3Contract();
 
+  const { runContractFunction: state } = useWeb3Contract();
+
   const campaign = useContract({
     address: campaignAddress,
     abi: campaignAbi,
@@ -142,6 +144,16 @@ export default function Propose() {
       const proposalId = proposeReciept.events[0].args.proposalId;
       addProposal(proposalId);
       console.log(`Proposed with proposal ID:\n  ${proposalId}`);
+      const options1 = {
+        abi: governorAbi,
+        contractAddress: governorAddress,
+        functionName: "state",
+        params: {
+          proposalId: proposalId,
+        },
+      };
+      const proposalState = await state({ params: options1 });
+      console.log(`Proposal state:\n  ${proposalState}`);
     } catch (error) {
       console.log(error);
     }

@@ -14,6 +14,10 @@ import * as fs from "fs";
 export default function vote() {
   const { chainId: chainIdHex } = useMoralis();
   const chainId = parseInt(chainIdHex);
+  const chainIdStr = chainId.toString();
+
+  var proposals;
+
   const campaignAddress =
     chainId in contractAddresses ? contractAddresses[chainId][1][0] : null;
   const governorAddress =
@@ -27,7 +31,7 @@ export default function vote() {
   }
   // console.log(obj);
 
-  const [proposals, setProposals] = useState(true);
+  // const [proposals, setProposals] = useState({});
 
   const {
     runContractFunction: castVoteWithReason,
@@ -36,13 +40,18 @@ export default function vote() {
     isFetching,
   } = useWeb3Contract();
 
+  const { runContractFunction: state } = useWeb3Contract();
+
   async function voteMain(voteWay, reason) {
-    fetchProposals();
+    await fetchProposals();
     console.log(proposals);
+    // const cart = ["apple", "banana", "pear"];
+    // const last = cart.at(-1);
+    // console.log(last);
     // const proposalss = JSON.parse(proposals[chainId].at(-1).toString());
     // console.log(proposalss);
     // Get the last proposal for the network. You could also change it for your index
-    const proposalId = proposals[chainId].at(-1);
+    const proposalId = proposals[chainIdStr].at(-1);
     console.log(`proposal ID is ${proposalId}`);
 
     const options = {
@@ -60,25 +69,48 @@ export default function vote() {
       onSuccess: handleSuccess,
       onError: (error) => console.log(error),
     });
-  }
 
-  const fetchProposals = async () => {
-    const response = await fetch("/api/proposals", {
-      method: "GET",
-    });
-    const data = await response.json();
-    setProposals(data);
-    console.log(data);
-  };
+    // await moveBlocks(1);
+  }
 
   const handleSuccess = async (tx) => {
     try {
       const voteTxReceipt = await tx.wait(1);
       console.log(voteTxReceipt.events[0].args.reason);
+      console.log(voteTxReceipt.events[0].args.support);
+      const options1 = {
+        abi: governorAbi,
+        contractAddress: governorAddress,
+        functionName: "state",
+        params: {
+          proposalId: proposalId,
+        },
+      };
+      const proposalState = await state({ params: options1 });
+      console.log(`Proposal state:\n  ${proposalState}`);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const fetchProposals = async () => {
+    const response = await fetch("/api/proposals", {
+      method: "GET",
+    });
+    proposals = await response.json();
+
+    console.log(proposals);
+  };
+
+  // const moveBlocks = async (amount) => {
+  //   const response = await fetch("/api/evm/moveBlocks", {
+  //     method: "POST",
+  //     body: amount,
+  //     headers: { "Content-Type": "text/plain" },
+  //   });
+  //   const data = await response.text();
+  //   console.log(data);
+  // };
 
   return (
     <div className="container mx-auto px-4">
@@ -96,7 +128,7 @@ export default function vote() {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto rounded my-2 disabled:cursor-not-allowed disabled:opacity-50"
             onClick={async function () {
               // 0 = Against, 1 = For, 2 = Abstain for this example
-              await voteMain(1, "xyz");
+              voteMain(1, "xyz");
             }}
             disabled={isLoading || isFetching}
           >
