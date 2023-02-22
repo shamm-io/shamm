@@ -14,7 +14,7 @@ import {
   proposalsFile,
   FUNC,
   PROPOSAL_DESCRIPTION,
-} from "../../shamm_2/helper-hardhat-config";
+} from "../helpers/helper";
 
 import { ethers } from "ethers";
 // import { moveBlocks } from "../../shamm_2/utils/move-blocks";

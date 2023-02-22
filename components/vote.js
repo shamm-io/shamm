@@ -8,7 +8,7 @@ import {
   // proposalsFile,
   FUNC,
   PROPOSAL_DESCRIPTION,
-} from "../../shamm_2/helper-hardhat-config";
+} from "../helpers/helper";
 import * as fs from "fs";
 
 export default function vote() {

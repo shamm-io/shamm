@@ -26,7 +26,6 @@
     "web3uikit": "^1.0.4"
   },
   "devDependencies": {
-    
     "autoprefixer": "^10.4.13",
     "ethers": "^5.7.2",
     "postcss": "^8.4.21",
