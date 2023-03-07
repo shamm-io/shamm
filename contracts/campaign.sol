@@ -239,15 +239,19 @@ contract Campaign is Ownable, AutomationCompatibleInterface {
         return true;
     }
 
+    // function getOwner() public view returns (address) {
+    //     return super.owner();
+    // }
+
     function getOwner() public view returns (address) {
-        return super.owner();
+        return i_owner;
     }
 
     function getBalance() public view returns (uint256) {
         return address(this).balance;
     }
 
-    function setUpdateInterval(uint256 addedInterval) public {
+    function setUpdateInterval(uint256 addedInterval) public onlyOwner {
         updateInterval = updateInterval + addedInterval;
     }
 
