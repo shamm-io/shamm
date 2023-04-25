@@ -4,7 +4,7 @@
 
 @layer base{
     html{
-        @apply font-primary;
+        @apply font-primary text-white;
     }
 }
 
@@ -30,4 +30,46 @@
 
 #connectWalletButton button:hover span{
     color: #FFF;
+}
+.header-container{
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.body{
+    @apply mt-20;
+}
+.card progress {
+    width: 100%;
+    border-radius: 21px;
+    overflow: hidden;
+    height: 6px;
+    vertical-align: super;
+}
+.card progress::-webkit-progress-bar {
+    background-color: #252525;
+}
+.card progress::-webkit-progress-value {
+    background-color: #B42222;
+    border-radius: 21px;
+}
+.custom-slider .splide__slide{
+    overflow: hidden;
+    border-radius: 1rem;
+}
+.custom-slider .splide__arrow{
+    background: transparent;
+    border-radius: 0;
+    height: 4em;
+    width: 4em;
+}
+.custom-slider .splide__arrow svg{
+    fill: #FFF;
+    height: 2.5em;
+    width: 2.5em;
+}
+.custom-slider .splide__arrow--prev{
+    left: -4em;
+}
+.custom-slider .splide__arrow--next{
+    right: -4em;
 }
