@@ -14,7 +14,7 @@ import {
   proposalsFile,
   FUNC,
   PROPOSAL_DESCRIPTION,
-} from "../../shamm_2/helper-hardhat-config";
+} from "../helpers/helper";
 import * as fs from "fs";
 // import { moveBlocks } from "../../shamm_2/utils/move-blocks";
 
@@ -35,8 +35,8 @@ export default function Propose() {
     chainId in contractAddresses ? contractAddresses[chainId][1][0] : null;
 
   try {
-    var governorAbi = JSON.parse(abi[chainId][4]); // Here I am parsing String-Abi into JSON
-    var campaignAbi = JSON.parse(abi[chainId][1]);
+    var governorAbi = chainId in abi ? JSON.parse(abi[chainId][4]) : null; // Here I am parsing String-Abi into JSON
+    var campaignAbi = chainId in abi ? JSON.parse(abi[chainId][1]) : null;
   } catch (ex) {
     console.error(ex);
   }
