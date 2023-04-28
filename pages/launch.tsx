@@ -2,14 +2,75 @@ import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 import Header from '../components/header'
 import Footer from '../components/footer'
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
+import Modal from '../components/modal'
+import { initFirebase, initDB, initStorage } from '@/firebase/firebase'
+import { addDoc, arrayUnion, collection, serverTimestamp, updateDoc, doc, } from "firebase/firestore"
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { useDropzone } from 'react-dropzone'
 
 export default function Home() {
+
+    initFirebase()
+
+    const db = initDB()
+    const storage = initStorage()
+
+    const titleRef = useRef(null)
+    const categoryRef = useRef(null)
+    const goalRef = useRef(null)
+    const timelineRef = useRef(null)
+    const descriptionRef = useRef(null)
+
+    const uploadProject = async () => {
+        const docRef = await addDoc(collection(db, "projects"), {
+            project_title: titleRef.current.value,
+            project_category: categoryRef.current.value,
+            project_description: descriptionRef.current.value,
+            funding_timeline: timelineRef.current.value,
+            funding_goal: goalRef.current.value,
+            timestamp: serverTimestamp()
+        })
+        await Promise.all(
+            selectedImages.map(image => {
+                const imageRef = ref(storage, `projects/${docRef.id}/${image.path}`)
+                uploadBytes(imageRef, image, "data_url").then(async () => {
+                    const downloadURL = await getDownloadURL(imageRef)
+                    await updateDoc(doc(db,'projects',docRef.id),{
+                        project_media: arrayUnion(downloadURL)
+                    })
+                })
+            })
+        )
+        titleRef.current.value = ''
+        goalRef.current.value = ''
+        timelineRef.current.value = ''
+        descriptionRef.current.value = ''
+
+        setSelectedImages([])
+
+        setShowModal(false)
+    }
+
+    const [showModal, setShowModal] = useState(false)
+
+    const [selectedImages, setSelectedImages] = useState([])
     const onDrop = useCallback(acceptedFiles => {
-        // Do something with the files
+        setSelectedImages(acceptedFiles.map(file =>
+            Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            })
+        ))
     }, [])
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop })
+
+    const selected_images = selectedImages?.map(file => (
+        <div className='w-full'>
+            <img src={file.preview} style={{ width: "200px" }} alt='Shamm' />
+        </div>
+    ))
+
     return (
         <>
             <Head>
@@ -47,14 +108,14 @@ export default function Home() {
                                 <div className='grid grid-cols-12 gap-x-8 gap-y-4'>
                                     <div className='col-span-12 md:col-span-6'>
                                         <label className='block mb-1 pl-4' htmlFor="title">Title of your project *</label>
-                                        <input className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='Education for all' type='text'>
+                                        <input className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' ref={titleRef} placeholder='Education for all' type='text'>
                                         </input>
                                     </div>
 
                                     <div className='col-span-12 md:col-span-6'>
                                         <label className='block mb-1 pl-4' htmlFor="category">Select category *</label>
                                         <div className='relative'>
-                                            <select name="category" id="category" className='bg-eerie-black w-full text-eerie-grey block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md appearance-none'>
+                                            <select ref={categoryRef} name="category" id="category" className='bg-eerie-black w-full text-eerie-grey block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md appearance-none'>
                                                 <option value="education">Education</option>
                                                 <option value="climate">Climate</option>
                                             </select>
@@ -65,7 +126,7 @@ export default function Home() {
                                     <div className='col-span-12 md:col-span-6'>
                                         <label className='block mb-1 pl-4' htmlFor="title">Funding goal *</label>
                                         <div className='relative'>
-                                            <input className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='8000' type='number'>
+                                            <input ref={goalRef} className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='8000' type='number'>
                                             </input>
                                             <span className='absolute top-[0.4em] right-4 text-eerie-grey'>ETH</span>
                                         </div>
@@ -74,7 +135,7 @@ export default function Home() {
                                     <div className='col-span-12 md:col-span-6'>
                                         <label className='block mb-1 pl-4' htmlFor="title">Funding timeline *</label>
                                         <div className='relative'>
-                                            <input className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='4' type='number'>
+                                            <input ref={timelineRef} className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='4' type='number'>
                                             </input>
                                             <span className='absolute top-[0.4em] right-4 text-eerie-grey'>Months</span>
                                         </div>
@@ -82,28 +143,32 @@ export default function Home() {
 
                                     <div className='col-span-12'>
                                         <label className='block mb-1 pl-4' htmlFor="title">Project description *</label>
-                                        <textarea className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='Describe your project here' rows={10}>
+                                        <textarea ref={descriptionRef} className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='Describe your project here' rows={10}>
                                         </textarea>
                                     </div>
 
                                     <div className='col-span-12'>
                                         <label className='block mb-1 pl-4' htmlFor="title">Add media *</label>
-                                        <div className='h-28 flex items-center justify-center border-2 border-dashed border-eerie-grey' {...getRootProps()}>
+                                        <div className='h-28 flex items-center rounded-md justify-center border-2 border-dashed border-eerie-grey' {...getRootProps()}>
+                                            <p className='text-eerie-grey'>Drag and drop or <span className='text-drop-blue underline cursor-pointer'>Browse</span></p>
                                             <input {...getInputProps()} />
-                                            {
-                                                isDragActive ?
-                                                    <p>Drop the files here ...</p> :
-                                                    <p className='text-eerie-grey'>Drag and drop or <span className='text-drop-blue underline cursor-pointer'>Browse</span></p>
-                                            }
+                                            {selected_images}
                                         </div>
                                     </div>
                                     <div className='col-span-12 mt-4'>
-                                        <a className='bg-money-green text-black px-8 py-2 rounded-md font-bold' href="">Submit</a>
+                                        <button
+                                            className='bg-money-green text-black px-8 py-2 rounded-md font-bold'
+                                            onClick={() => {
+                                                setShowModal(true);
+                                            }}>
+                                            Submit
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </section>
+                    {showModal && <Modal setOpenModal={setShowModal} uploadProject={uploadProject} />}
                 </div>
                 <Footer />
             </div>

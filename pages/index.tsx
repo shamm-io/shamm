@@ -4,7 +4,7 @@ import styles from '@/styles/Home.module.css'
 import Header from '../components/header'
 import Footer from '../components/footer'
 import Card from '../components/card'
-import CountUp, { useCountUp } from 'react-countup';
+import CountUp, { useCountUp } from 'react-countup'
 // import { useMoralis } from 'react-moralis'
 // import RequestFunding from '../components/request-funding'
 // import Propose from '../components/propose'
@@ -18,6 +18,7 @@ import '@splidejs/react-splide/css/core'
 import Link from 'next/link'
 
 export default function Home() {
+
   return (
     <>
       <Head>

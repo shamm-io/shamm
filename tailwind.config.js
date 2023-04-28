@@ -42,7 +42,7 @@ module.exports = {
         btn: '20px',
       },
       blur: {
-        sms: '5px',
+        sms: '3px',
       }
     },
   },
