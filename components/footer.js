@@ -5,7 +5,7 @@ export default function Header() {
         <div className="container pb-8 max-w-5xl mx-auto border-t-2 border-t-white">
             <div className="relative text-center mt-4 mb-5">
                 <a title="Shamm Logo" className="font-extrabold leading-[48px] text-[36px] text-white" href="/">Shamm.</a>
-                <a title="Shamm Logo" className="font-extrabold leading-[48px] text-[36px] text-white blur-[2.5px] absolute w-full h-full top-0 right-0" href="/">Shamm.</a>
+                <a title="Shamm Logo" className="font-extrabold leading-[48px] text-[36px] text-white blur-[2px] absolute w-full h-full top-0 right-0" href="/">Shamm.</a>
             </div>
             <div className="flex px-16 justify-center mx-auto gap-x-2 items-center">
                 <input className="basis-3/4 bg-black rounded-lg px-4 py-2 outline-none placeholder:text-input-grey" type="text" placeholder="Enter your email address"></input>

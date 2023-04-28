@@ -52,9 +52,26 @@
     background-color: #B42222;
     border-radius: 21px;
 }
+progress.project-slider {
+    width: 60%;
+    border-radius: 21px;
+    overflow: hidden;
+    height: 6px;
+    vertical-align: middle;
+}
+progress.project-slider::-webkit-progress-bar {
+    background-color: #252525;
+}
+progress.project-slider::-webkit-progress-value {
+    background-color: #C6B51B;
+    border-radius: 21px;
+}
 .custom-slider .splide__slide{
     overflow: hidden;
     border-radius: 1rem;
+}
+.custom-slider.iop .slide__slide{
+    border-radius: 0.5rem;
 }
 .custom-slider .splide__arrow{
     background: transparent;
