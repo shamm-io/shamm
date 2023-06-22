@@ -9,16 +9,14 @@
 }
 
 #connectWalletButton button{
-    background-color: #FFF;
-    border-radius: 0;
-    border: 1px solid #000;
-    transition-property: background-color;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    @apply px-14 h-[2.81rem] leading-[2.8rem] rounded-md bg-transparent border-2 border-white text-white shadow-shammBtnAlt relative inline-flex items-center justify-center backdrop-blur-btn hover:bg-white hover:text-black transition-colors;
+}
+.hide-propose{
+    display: none;
 }
 
 #connectWalletButton button span{
-    color: #000;
+    color: #fff;
     transition-property: color;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;

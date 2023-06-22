@@ -4,7 +4,9 @@ import styles from '@/styles/Home.module.css'
 import Header from '../components/header'
 import Footer from '../components/footer'
 import Card from '../components/card'
+import { ConnectButton } from "web3uikit";
 import CountUp, { useCountUp } from 'react-countup'
+import { useSession } from 'next-auth/react';
 // import { useMoralis } from 'react-moralis'
 // import RequestFunding from '../components/request-funding'
 // import Propose from '../components/propose'
@@ -18,6 +20,8 @@ import '@splidejs/react-splide/css/core'
 import Link from 'next/link'
 
 export default function Home() {
+
+  const { data: session } = useSession()
 
   return (
     <>
@@ -79,6 +83,15 @@ export default function Home() {
                 </div>
                 <div className='inline-block pb-2.5'>
                   <Link href="/propose" className='px-14 h-[2.81rem] leading-[2.8rem] rounded-md bg-light-black text-white shadow-shammBtnAlt relative inline-flex items-center justify-center backdrop-blur-btn hover:bg-white hover:text-black transition-colors'>Pitch Your Idea</Link>
+                </div>
+                <div className='inline-block pb-2.5'>
+
+                  {session?.user ? (
+
+                    <div id="connectWalletButton">
+                      <ConnectButton moralisAuth={false} />
+                    </div>
+                  ) : ("")}
                 </div>
               </div>
             </div>

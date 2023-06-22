@@ -1,11 +1,30 @@
 import Head from 'next/head'
+import { MongoClient } from 'mongodb'
+import type { NextPage } from 'next'
 import styles from '@/styles/Home.module.css'
 import Header from '../components/header'
 import Footer from '../components/footer'
 import Slider from '../components/slider'
 import Card from '../components/card'
 
-export default function Home() {
+export async function getStaticProps(context: any) {
+    const client = await MongoClient.connect(process.env.MONGODB_URI)
+    const todoCollection = client.db().collection("proposals")
+    const todoArray = await todoCollection.find().toArray()
+    client.close()
+    return {
+        props: {
+            proposals: todoArray.map(proposals => ({
+                title: proposals.title,
+                description: proposals.description,
+                id: proposals._id.toString()
+            }))
+        },
+        revalidate: 60
+    }
+}
+
+const Home: NextPage = (props: any) => {
     return (
         <>
             <Head>
@@ -34,6 +53,13 @@ export default function Home() {
                                 <a className='text-white text-xs'>View more</a>
                             </div>
                             <Slider>
+                                {
+                                    props.proposals.map((proposal: any) => (
+                                        <a href='/projects/LyVfspAEPlcpXXedEVwE'>
+                                            <Card type="type1" stars="3.5" img="https://plus.unsplash.com/premium_photo-1680776074086-6883674e03e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80" category="Environment & Sustainability" title={proposal.title} content={proposal.description.substring(0, 125) + '...'} progress="40" amount="5K" />
+                                        </a>
+                                    ))
+                                }
                                 <Card type="type1" stars="3.5" img="https://plus.unsplash.com/premium_photo-1680776074086-6883674e03e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80" category="Environment & Sustainability" title="Clean Oceans Initiative" content="Help Us in building the ecology" progress="40" amount="5K" />
                                 <Card type="type1" stars="3.5" img="https://plus.unsplash.com/premium_photo-1680776074086-6883674e03e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80" category="Environment & Sustainability" title="Clean Oceans Initiative" content="Help fund a revolutionary technology that cleans up plastic waste from our oceans and turns it into useful products. Join the fight against plastic pollution..." progress="40" amount="5K" />
                                 <Card type="type1" stars="3.5" img="https://plus.unsplash.com/premium_photo-1680776074086-6883674e03e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80" category="Environment & Sustainability" title="Clean Oceans Initiative" content="Help fund a revolutionary technology that cleans up plastic waste from our oceans and turns it into useful products. Join the fight against plastic pollution..." progress="40" amount="5K" />
@@ -82,3 +108,4 @@ export default function Home() {
         </>
     )
 }
+export default Home

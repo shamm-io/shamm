@@ -1,6 +1,7 @@
 import { useWeb3Contract } from "react-moralis";
 import { abi, contractAddresses } from "../constants";
 import { useMoralis } from "react-moralis";
+import { useState } from "react";
 import {
   useContract,
   useNetwork,
@@ -16,9 +17,11 @@ import {
   PROPOSAL_DESCRIPTION,
 } from "../helpers/helper";
 import * as fs from "fs";
+import { TextArea } from "web3uikit";
 // import { moveBlocks } from "../../shamm_2/utils/move-blocks";
 
 export default function Propose() {
+  const [desc, setDesc] = useState('');
   const { chainId: chainIdHex } = useMoralis();
   // const { chain, chains } = useNetwork();
   const chainId = parseInt(chainIdHex);
@@ -160,13 +163,22 @@ export default function Propose() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 flex justify-center h-100 items-center">
       {campaignAddress ? (
         <div>
+          <textarea
+              className="bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md mb-10"
+              type="text"
+              cols={50}
+              rows={10}
+              value={desc} name="desc" onChange={e => setDesc(e.target.value)}
+              placeholder="Lorem Ipsum"
+          >
+          </textarea>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto my-2"
+            className="bg-money-green text-black px-8 py-2 rounded-md font-bold"
             onClick={async function () {
-              await _propose([], FUNC, PROPOSAL_DESCRIPTION);
+              await _propose([], FUNC, desc);
             }}
             disabled={isLoading || isFetching}
           >
