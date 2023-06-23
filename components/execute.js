@@ -95,11 +95,11 @@ export default function Execute() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container flex justify-center mx-auto px-4">
       {campaignAddress ? (
         <div>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto my-2"
+            className="bg-money-green text-black px-8 py-2 rounded-md font-bold"
             onClick={async function () {
               await _execute([], FUNC, PROPOSAL_DESCRIPTION);
             }}

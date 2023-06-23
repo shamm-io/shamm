@@ -113,7 +113,7 @@ export default function vote() {
   // };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 flex justify-center">
       {campaignAddress ? (
         <div>
           <form>
@@ -125,7 +125,7 @@ export default function vote() {
             /> */}
           </form>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto rounded my-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-money-green text-black px-8 py-2 rounded-md font-bold"
             onClick={async function () {
               // 0 = Against, 1 = For, 2 = Abstain for this example
               voteMain(1, "xyz");

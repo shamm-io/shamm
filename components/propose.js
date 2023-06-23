@@ -147,6 +147,20 @@ export default function Propose() {
       const proposalId = proposeReciept.events[0].args.proposalId;
       addProposal(proposalId);
       console.log(`Proposed with proposal ID:\n  ${proposalId}`);
+
+      const { exec } = require("child_process")
+
+      exec("cd E:\\Shamm\\shamm-back-end && yarn hardhat run scripts/move-time.ts", (error, stdout, stderr) => {
+        if (error) {
+          console.log(`error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`stderr: ${stderr}`);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+      });
       const options1 = {
         abi: governorAbi,
         contractAddress: governorAddress,
@@ -167,12 +181,12 @@ export default function Propose() {
       {campaignAddress ? (
         <div>
           <textarea
-              className="bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md mb-10"
-              type="text"
-              cols={50}
-              rows={10}
-              value={desc} name="desc" onChange={e => setDesc(e.target.value)}
-              placeholder="Lorem Ipsum"
+            className="bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md mb-10"
+            type="text"
+            cols={50}
+            rows={10}
+            value={desc} name="desc" onChange={e => setDesc(e.target.value)}
+            placeholder="Lorem Ipsum"
           >
           </textarea>
           <button

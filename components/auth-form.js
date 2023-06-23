@@ -3,10 +3,10 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 
-async function createUser(email, password) {
+async function createUser(email, password, role) {
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, role }),
     headers: {
       'Content-Type': 'application/json',
     },
@@ -25,6 +25,7 @@ function AuthForm() {
   const [registered, setRegistered] = useState(false)
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const roleInputRef = useRef();
 
   const [isLogin, setIsLogin] = useState(true);
   const router = useRouter();
@@ -38,6 +39,7 @@ function AuthForm() {
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+    const enteredRole = roleInputRef?.current?.value;
 
     // optional: Add validation
 
@@ -50,7 +52,7 @@ function AuthForm() {
 
     } else {
       try {
-        const result = await createUser(enteredEmail, enteredPassword);
+        const result = await createUser(enteredEmail, enteredPassword, enteredRole);
         setRegistered(true)
       } catch (error) {
         console.log(error);
@@ -74,10 +76,22 @@ function AuthForm() {
                 type='password'
                 id='password'
                 placeholder='Password'
-                className='w-full bg-transparent mb-10 outline-0 border-b-gray-400 border-b-2 pb-2 transition-colors duration-200 focus:border-b-white'
+                className='w-full bg-transparent mb-6 outline-0 border-b-gray-400 border-b-2 pb-2 transition-colors duration-200 focus:border-b-white'
                 required
                 ref={passwordInputRef}
               />
+              {isLogin ? '' : (
+                <select
+                  id='role'
+                  className='w-full bg-transparent mb-10 outline-0 border-b-gray-400 border-b-2 pb-2 transition-colors duration-200 focus:border-b-white'
+                  required
+                  placeholder='Role'
+                  ref={roleInputRef}
+                >
+                  <option value='user' className='bg-black/90'>User</option>
+                  <option value='owner' className='bg-black/90'>Owner</option>
+                </select>
+              )}
             </div>
             <div className=''>
               <button className='button button-color mr-4 font-medium border-2 py-1 px-6 border-white rounded-md hover:bg-white hover:text-black transition-colors duration-200'>{isLogin ? 'Log In' : 'Create Account'}</button>
@@ -92,12 +106,12 @@ function AuthForm() {
       ) : (
         <div className=''>
           <p>You have successfully registered!</p>
-          
+
           <button onClick={() => router.reload()} className='button button-color'>Login Now</button>
-          
+
         </div>
       )}
-      
+
     </section>
   );
 }

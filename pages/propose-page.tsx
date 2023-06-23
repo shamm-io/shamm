@@ -17,14 +17,14 @@ export default function proposePage() {
       <div className={styles.backgroundImage}>
         <div className="container lg:pb-[30px] mx-auto body">
           <section className='relative h-[calc(100vh-5rem)] max-h-[800px]'>
-          <div id="connectWalletButton" className="hidden">
-            <ConnectButton moralisAuth={false} />
-          </div>
-          <Propose />
+            <div id="connectWalletButton" className="hidden">
+              <ConnectButton moralisAuth={false} />
+            </div>
+            <Propose />
           </section>
-          </div>
-          </div>
-      
+        </div>
+      </div>
+
     </>
   )
 }
