@@ -1,6 +1,9 @@
 import React from "react";
+import RequestFunding from "./request-funding";
+import { ConnectButton } from "web3uikit";
 
 export default function Modal({ setOpenModal, uploadProject, contributeAmount }) {
+
     return (
         <>
             <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -15,7 +18,7 @@ export default function Modal({ setOpenModal, uploadProject, contributeAmount })
                                 <h4 className="text-2xl font-semibold mb-2 ml-6 text-left">
                                     Amount (in ETH)
                                 </h4>
-                                <div className='relative mb-4'>
+                                {/* <div className='relative mb-4'>
                                     <input ref={contributeAmount} className='bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md' placeholder='8000' type='number'>
                                     </input>
                                     <span className='absolute top-[0.4em] right-4 text-eerie-grey'>ETH</span>
@@ -25,7 +28,11 @@ export default function Modal({ setOpenModal, uploadProject, contributeAmount })
                                     onClick={() => uploadProject()}
                                 >
                                     Contribute
-                                </button>
+                                </button> */}
+                                <RequestFunding />
+                                <div id="connectWalletButton" className="hidden">
+                                    <ConnectButton moralisAuth={false} />
+                                </div>
                             </div>
                         </div>
                     </div>

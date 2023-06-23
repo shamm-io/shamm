@@ -60,23 +60,24 @@ export default function RequestFunding() {
   //   console.log(`before ${fundAmount}`);
   // }
 
+  
+
   return (
     <div className="container mx-auto px-4">
       {campaignAddress ? (
         <div>
-          <form>
-            <label htmlFor="fname">Enter amount</label>
-            <br />
+          <form className="relative mb-4">
             <input
-              className="bg-white py-2 px-4 border-2"
+              className="bg-eerie-black w-full block outline-none placeholder:text-eerie-grey px-4 py-1.5 rounded-md"
               type="number"
               id="fundAmount"
               placeholder="Min 0.1"
               onChange={handleChange}
             />
+            <span className='absolute top-[0.4em] right-4 text-eerie-grey'>ETH</span>
           </form>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 ml-auto rounded my-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="bg-money-green text-black px-8 py-2 rounded-md font-bold"
             onClick={async function () {
               //   setAmountVal();
               await requestFunding({
@@ -89,7 +90,7 @@ export default function RequestFunding() {
             {isLoading || isFetching ? (
               <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
             ) : (
-              "Request Funding"
+              "Contribute"
             )}
           </button>
         </div>

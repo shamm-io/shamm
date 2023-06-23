@@ -20,6 +20,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/projects/[projectID].js", "components/propose.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/projects/[projectID].js", "components/propose.js", "models/user.js", "lib/mongodb.js", "pages/api/auth/signup.js"],
   "exclude": ["node_modules"]
 }

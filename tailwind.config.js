@@ -43,6 +43,12 @@ module.exports = {
       },
       blur: {
         sms: '3px',
+      },
+      width: {
+        100: '30rem'
+      },
+      height: {
+        100: '30rem'
       }
     },
   },

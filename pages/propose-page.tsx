@@ -16,8 +16,8 @@ export default function proposePage() {
       <Header />
       <div className={styles.backgroundImage}>
         <div className="container lg:pb-[30px] mx-auto body">
-          <section className='relative lg:pt-[168px] h-[calc(100vh-5rem)] max-h-[800px]'>
-          <div id="connectWalletButton">
+          <section className='relative h-[calc(100vh-5rem)] max-h-[800px]'>
+          <div id="connectWalletButton" className="hidden">
             <ConnectButton moralisAuth={false} />
           </div>
           <Propose />

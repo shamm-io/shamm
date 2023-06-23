@@ -4,10 +4,30 @@ import Header from '../components/header'
 import Footer from '../components/footer'
 import React, { useCallback, useRef, useState } from 'react'
 import Modal from '../components/modal'
-import { initFirebase, initDB, initStorage } from '@/firebase/firebase'
+import { initFirebase, initStorage, initDB } from '@/firebase/firebase'
 import { addDoc, arrayUnion, collection, serverTimestamp, updateDoc, doc, } from "firebase/firestore"
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage'
 import { useDropzone } from 'react-dropzone'
+
+async function createProposal(title: any, category: any, goal: any, timeline: any, description: any) {
+    const response = await fetch('/api/proposal/add', {
+        method: 'POST',
+        body: JSON.stringify({ title, category, goal, timeline, description }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const data = await response.json();
+
+    console.log(data.id)
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong!');
+    }
+
+    return data;
+}
 
 export default function Home() {
 
@@ -23,22 +43,22 @@ export default function Home() {
     const descriptionRef = useRef(null)
 
     const uploadProject = async () => {
-        const docRef = await addDoc(collection(db, "projects"), {
-            project_title: titleRef.current.value,
-            project_category: categoryRef.current.value,
-            project_description: descriptionRef.current.value,
-            funding_timeline: timelineRef.current.value,
-            funding_goal: goalRef.current.value,
-            timestamp: serverTimestamp()
-        })
+        const enteredTitle = titleRef.current.value;
+        const enteredCategory = categoryRef.current.value;
+        const enteredGoal = goalRef.current.value;
+        const enteredTimeline = timelineRef.current.value;
+        const enteredDescription = descriptionRef.current.value;
+
+        const docRef = await createProposal(enteredTitle, enteredCategory, enteredGoal, enteredTimeline, enteredDescription);
+        console.log(docRef.id)
         await Promise.all(
             selectedImages.map(image => {
                 const imageRef = ref(storage, `projects/${docRef.id}/${image.path}`)
                 uploadBytes(imageRef, image, "data_url").then(async () => {
-                    const downloadURL = await getDownloadURL(imageRef)
-                    await updateDoc(doc(db,'projects',docRef.id),{
-                        project_media: arrayUnion(downloadURL)
-                    })
+                    // const downloadURL = await getDownloadURL(imageRef)
+                    // await updateDoc(doc(db, 'projects', docRef.id), {
+                    //     project_media: arrayUnion(downloadURL)
+                    // })
                 })
             })
         )

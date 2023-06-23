@@ -1,29 +1,15 @@
-import { ConnectButton } from "web3uikit";
+import { useSession, signOut, signIn, signUp } from 'next-auth/react';
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { initFirebase } from "@/firebase/firebase";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useState } from "react";
 
 export default function Header() {
-  initFirebase();
-  const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { data: session } = useSession()
 
   const handleOpen = () => {
     setOpen(!open);
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const signIn = async () => {
-    const result = await signInWithPopup(auth, provider);
   };
 
   return (
@@ -99,24 +85,14 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center justify-end gap-x-3 text-white whitespace-nowrap">
-            {/* <div id="connectWalletButton">
-              <ConnectButton moralisAuth={false} />
-            </div> */}
-
-            {user ? (
+            {session?.user ? (
               <div className="relative">
                 <div
                   className="cursor-pointer flex items-center gap-x-2"
                   onClick={handleOpen}
                 >
-                  <img
-                    className="rounded-full"
-                    height={30}
-                    width={30}
-                    src={user.photoURL}
-                  ></img>
                   <span className="text-base text-money-green">
-                    {user.displayName}
+                    {session.user.email}
                   </span>
                   <svg
                     className="w-12"
@@ -135,7 +111,7 @@ export default function Header() {
                   </svg>
                 </div>
                 {open ? (
-                  <div className="absolute w-full top-10 text-left bg-nero py-2 px-5 border-2 shadow-card border-card-border rounded-lg">
+                  <div className="absolute top-10 text-left bg-nero py-2 px-5 border-2 shadow-card border-card-border rounded-lg w-52">
                     <ul className="text-base leading-8">
                       <li className="hover:text-money-green hover:font-medium transition-all">
                         My Projects
@@ -143,9 +119,12 @@ export default function Header() {
                       <li className="hover:text-money-green hover:font-medium transition-all">
                         Project Contributions
                       </li>
+                      <Link href='/propose-page' className="hover:text-money-green hover:font-medium transition-all">
+                        Propose
+                      </Link>
                       <li
-                        className="hover:text-money-green hover:font-medium transition-all"
-                        onClick={() => auth.signOut()}
+                        className="hover:text-money-green hover:font-medium transition-all cursor-pointer"
+                        onClick={() => signOut()}
                       >
                         Logout
                       </li>
@@ -157,18 +136,18 @@ export default function Header() {
               </div>
             ) : (
               <>
-                <button
+                <Link
                   className="font-medium text-sm border-2 py-1 px-3 border-white rounded-md"
-                  onClick={signIn}
+                  href='/login'
                 >
                   Sign up
-                </button>
-                <button
+                </Link>
+                <Link
                   className="font-medium text-sm border-2 py-1 px-3 border-black bg-black rounded-md shammBtn"
-                  onClick={signIn}
+                  href='/login'
                 >
                   Login
-                </button>
+                </Link>
               </>
             )}
           </div>
